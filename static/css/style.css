@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3rem;
+}
+
+.btn {
+    background: #00e5ff;
+    color: black;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+}
+
+.container, .result-box {
+    max-width: 400px;
+    margin: 80px auto;
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 15px;
+}
+
+input, select, button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    background: #00e5ff;
+    font-weight: bold;
+}
+
+.risk {
+    font-size: 2rem;
+    margin: 20px 0;
+}
+
+.low-risk { color: #00ff99; }
+.moderate-risk { color: #ffcc00; }
+.high-risk { color: #ff4d4d; }
+
+.disclaimer {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* ✅ Result buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 25px;
+}
+
+/* 🤖 Chatbot */
+.chat-container {
+    max-width: 500px;
+    margin: 60px auto;
+    background: rgba(255,255,255,0.1);
+    padding: 25px;
+    border-radius: 15px;
+}
+
+#chat-box {
+    height: 300px;
+    overflow-y: auto;
+    padding: 12px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.user-msg {
+    color: #00e5ff;
+    margin: 6px 0;
+}
+
+.bot-msg {
+    color: #b2ff59;
+    margin: 6px 0;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+}
+
+.chat-actions {
+    margin-top: 18px;
+    text-align: center;
+}
+
+/* 🔧 ONLY FIX: make textarea behave like input but bigger */
+.chat-input textarea {
+    width: 100%;
+    height: 80px;       /* BIG TEXT BAR */
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    resize: none;
+    font-family: inherit;
+}

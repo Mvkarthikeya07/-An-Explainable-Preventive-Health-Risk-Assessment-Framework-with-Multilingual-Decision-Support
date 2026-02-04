@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ t.result }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="result-box">
+    <h2>{{ t.result }}</h2>
+
+    <div class="risk">
+        {{ risk }}
+    </div>
+
+    <p>{{ advice }}</p>
+
+    <!-- ✅ FIXED BUTTON LAYOUT -->
+    <div class="action-buttons">
+        <button type="button" class="btn" onclick="speakResult()">
+            🔊 Hear Result
+        </button>
+
+        <a href="/assessment" class="btn">
+            🔁 Start Assessment
+        </a>
+
+        <a href="/chatbot" class="btn">
+            💬 Talk to Health Assistant
+        </a>
+    </div>
+</div>
+
+<script>
+const lang = "{{ session.get('lang','en') }}";
+
+const resultVoices = {
+    en: {
+        low: "Your health risk level is low.",
+        moderate: "Your health risk level is moderate.",
+        high: "Your health risk level is high."
+    },
+    hi: {
+        low: "आपका स्वास्थ्य जोखिम स्तर कम है।",
+        moderate: "आपका स्वास्थ्य जोखिम स्तर मध्यम है।",
+        high: "आपका स्वास्थ्य जोखिम स्तर अधिक है।"
+    },
+    te: {
+        low: "మీ ఆరోగ్య ప్రమాద స్థాయి తక్కువగా ఉంది.",
+        moderate: "మీ ఆరోగ్య ప్రమాద స్థాయి మధ్యస్థంగా ఉంది.",
+        high: "మీ ఆరోగ్య ప్రమాద స్థాయి ఎక్కువగా ఉంది."
+    },
+    ta: {
+        low: "உங்கள் சுகாதார அபாய நிலை குறைவாக உள்ளது.",
+        moderate: "உங்கள் சுகாதார அபாய நிலை நடுத்தரமாக உள்ளது.",
+        high: "உங்கள் சுகாதார அபாய நிலை அதிகமாக உள்ளது."
+    },
+    ml: {
+        low: "നിങ്ങളുടെ ആരോഗ്യ അപകട നില കുറവാണ്.",
+        moderate: "നിങ്ങളുടെ ആരോഗ്യ അപകട നില മിതമാണ്.",
+        high: "നിങ്ങളുടെ ആരോഗ്യ അപകട നില കൂടുതലാണ്."
+    }
+};
+
+function speakResult() {
+    window.speechSynthesis.cancel();
+
+    const riskText = "{{ risk }}".toLowerCase();
+    let level = "low";
+    if (riskText.includes("moderate")) level = "moderate";
+    else if (riskText.includes("high")) level = "high";
+
+    const msg =
+        (resultVoices[lang] && resultVoices[lang][level]) ||
+        resultVoices["en"][level];
+
+    const utterance = new SpeechSynthesisUtterance(msg);
+    utterance.lang = lang + "-IN";
+    speechSynthesis.speak(utterance);
+}
+
+window.onload = speakResult;
+</script>
+
+</body>
+</html>

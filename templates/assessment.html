@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ t.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>{{ t.title }}</h2>
+
+    <form action="/result" method="POST">
+
+        <!-- AGE -->
+        <label>{{ t.age }}</label>
+        <div>
+            <input type="number" id="age" name="age" placeholder="{{ t.age }}" required>
+            <button type="button" onclick="listenNumber('age','age')">🎤</button>
+        </div>
+
+        <!-- BMI -->
+        <label>{{ t.bmi }}</label>
+        <div>
+            <input type="number" step="0.1" id="bmi" name="bmi" placeholder="{{ t.bmi }}" required>
+            <button type="button" onclick="listenNumber('bmi','bmi')">🎤</button>
+        </div>
+
+        <!-- BP -->
+        <label>{{ t.bp }}</label>
+        <div>
+            <input type="number" id="bp" name="bp" placeholder="{{ t.bp }}" required>
+            <button type="button" onclick="listenNumber('bp','bp')">🎤</button>
+        </div>
+
+        <!-- SUGAR -->
+        <label>{{ t.sugar }}</label>
+        <div>
+            <input type="number" id="sugar" name="sugar" placeholder="{{ t.sugar }}" required>
+            <button type="button" onclick="listenNumber('sugar','sugar')">🎤</button>
+        </div>
+
+        <!-- SMOKING -->
+        <label>{{ t.smoking }}</label>
+        <select id="smoking" name="smoking">
+            <option value="no">{{ t.no }}</option>
+            <option value="yes">{{ t.yes }}</option>
+        </select>
+        <button type="button" onclick="listenChoice('smoking','smoking')">🎤</button>
+
+        <!-- ACTIVITY -->
+        <label>{{ t.activity }}</label>
+        <select id="activity" name="activity">
+            <option value="high">{{ t.high }}</option>
+            <option value="medium">{{ t.medium }}</option>
+            <option value="low">{{ t.low }}</option>
+        </select>
+        <button type="button" onclick="listenChoice('activity','activity')">🎤</button>
+
+        <button type="submit">{{ t.analyze }}</button>
+    </form>
+
+    <p class="disclaimer">{{ t.disclaimer }}</p>
+</div>
+
+<script>
+/* ================= LANGUAGE ================= */
+const lang = "{{ session.get('lang','en') }}";
+
+/* ================= VOICE PROMPTS ================= */
+const voicePrompts = {
+    en: {
+        age: "Please say your age",
+        bmi: "Please say your BMI",
+        bp: "Please say your blood pressure",
+        sugar: "Please say your blood sugar level",
+        smoking: "Please say yes or no for smoking",
+        activity: "Please say high, moderate, or low physical activity",
+        entered: v => `Entered ${v}`
+    },
+    hi: {
+        age: "कृपया अपनी उम्र बताएं",
+        bmi: "कृपया अपना बीएमआई बताएं",
+        bp: "कृपया अपना रक्तचाप बताएं",
+        sugar: "कृपया अपना ब्लड शुगर बताएं",
+        smoking: "कृपया धूम्रपान के लिए हाँ या नहीं कहें",
+        activity: "कृपया उच्च, मध्यम या कम गतिविधि बताएं",
+        entered: v => `${v} दर्ज किया गया`
+    },
+    te: {
+        age: "దయచేసి మీ వయస్సు చెప్పండి",
+        bmi: "దయచేసి మీ బీఎంఐ చెప్పండి",
+        bp: "దయచేసి మీ రక్తపోటు చెప్పండి",
+        sugar: "దయచేసి మీ రక్తంలో చక్కెర చెప్పండి",
+        smoking: "పొగ త్రాగుతారా చెప్పండి",
+        activity: "ఎక్కువ, మధ్యస్థ లేదా తక్కువ చురుకుదనం చెప్పండి",
+        entered: v => `${v} నమోదు చేయబడింది`
+    },
+    ta: {
+        age: "தயவுசெய்து உங்கள் வயதை சொல்லுங்கள்",
+        bmi: "தயவுசெய்து உங்கள் பிஎம்ஐ சொல்லுங்கள்",
+        bp: "தயவுசெய்து உங்கள் இரத்த அழுத்தத்தை சொல்லுங்கள்",
+        sugar: "தயவுசெய்து உங்கள் இரத்த சர்க்கரையை சொல்லுங்கள்",
+        smoking: "புகைபிடிப்பது ஆம் அல்லது இல்லை சொல்லுங்கள்",
+        activity: "உயர், மிதமான அல்லது குறைந்த உடற்பயிற்சி சொல்லுங்கள்",
+        entered: v => `${v} பதிவு செய்யப்பட்டது`
+    },
+    ml: {
+        age: "ദയവായി നിങ്ങളുടെ പ്രായം പറയുക",
+        bmi: "ദയവായി നിങ്ങളുടെ ബിഎംഐ പറയുക",
+        bp: "ദയവായി നിങ്ങളുടെ രക്തസമ്മർദ്ദം പറയുക",
+        sugar: "ദയവായി നിങ്ങളുടെ ബ്ലഡ് ഷുഗർ പറയുക",
+        smoking: "പുകവലി ഉണ്ടോ എന്ന് പറയുക",
+        activity: "ഉയർന്ന, മിതമായ അല്ലെങ്കിൽ കുറഞ്ഞ പ്രവർത്തനം പറയുക",
+        entered: v => `${v} നൽകപ്പെട്ടു`
+    }
+};
+
+/* ================= SPEAK ================= */
+function speak(text) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang + "-IN";
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+}
+
+const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+/* ================= NUMBER INPUT ================= */
+function listenNumber(fieldId, key) {
+    speak(voicePrompts[lang][key]);
+
+    const rec = new SpeechRecognition();
+    rec.lang = lang + "-IN";
+    rec.start();
+
+    rec.onresult = e => {
+        const spoken = e.results[0][0].transcript;
+        const num = spoken.match(/\d+(\.\d+)?/);
+        if (num) {
+            document.getElementById(fieldId).value = num[0];
+            speak(voicePrompts[lang].entered(num[0]));
+        }
+    };
+}
+
+/* ================= CHOICE INPUT ================= */
+function listenChoice(fieldId, key) {
+    speak(voicePrompts[lang][key]);
+
+    const rec = new SpeechRecognition();
+    rec.lang = lang + "-IN";
+    rec.start();
+
+    rec.onresult = e => {
+        const spoken = e.results[0][0].transcript.toLowerCase();
+
+        /* SMOKING */
+        if (key === "smoking") {
+            if (
+                spoken.includes("yes") ||
+                spoken.includes("हाँ") ||
+                spoken.includes("అవును") ||
+                spoken.includes("ஆம்") ||
+                spoken.includes("അതെ")
+            ) {
+                document.getElementById(fieldId).value = "yes";
+                speak(voicePrompts[lang].entered("yes"));
+            } else {
+                document.getElementById(fieldId).value = "no";
+                speak(voicePrompts[lang].entered("no"));
+            }
+            return;
+        }
+
+        /* ACTIVITY */
+        if (key === "activity") {
+
+            if (
+                spoken.includes("high") ||
+                spoken.includes("active") ||
+                spoken.includes("ఎక్కువ") ||
+                spoken.includes("உயர்") ||
+                spoken.includes("സജീവ")
+            ) {
+                document.getElementById(fieldId).value = "high";
+                speak("Entered high physical activity");
+                return;
+            }
+
+            if (
+                spoken.includes("moderate") ||
+                spoken.includes("medium") ||
+                spoken.includes("మధ్య") ||
+                spoken.includes("மித") ||
+                spoken.includes("മിത")
+            ) {
+                document.getElementById(fieldId).value = "medium";
+                speak("Entered moderate physical activity");
+                return;
+            }
+
+            if (
+                spoken.includes("low") ||
+                spoken.includes("less") ||
+                spoken.includes("తక్కువ") ||
+                spoken.includes("குறை") ||
+                spoken.includes("കുറവ്")
+            ) {
+                document.getElementById(fieldId).value = "low";
+                speak("Entered low physical activity");
+                return;
+            }
+
+            speak("Sorry, I could not understand your activity level");
+        }
+    };
+}
+</script>
+
+</body>
+</html>
+
+

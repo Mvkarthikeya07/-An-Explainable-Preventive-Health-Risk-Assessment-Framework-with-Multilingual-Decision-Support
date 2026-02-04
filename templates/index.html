@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ t.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="hero">
+    <h1>{{ t.title }}</h1>
+
+    <form action="/set_language" method="POST">
+        <label>{{ t.select_lang }}</label>
+        <select name="lang" required>
+            <option value="en">English</option>
+            <option value="te">తెలుగు</option>
+            <option value="hi">हिंदी</option>
+            <option value="ta">தமிழ்</option>
+            <option value="ml">മലയാളം</option>
+        </select>
+
+        <br><br>
+        <button class="btn">{{ t.start }}</button>
+    </form>
+</div>
+
+</body>
+</html>
