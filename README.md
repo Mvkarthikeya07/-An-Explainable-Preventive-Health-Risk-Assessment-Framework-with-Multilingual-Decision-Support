@@ -207,9 +207,6 @@ The repository includes screenshots demonstrating:
 * Multilingual chatbot interaction
 * <img width="1366" height="768" alt="Screenshot (157)" src="https://github.com/user-attachments/assets/b63e2d5e-648d-4f3a-975a-a00a2bd8bfaf" />
 
-* Project directory structure
-* <img width="1366" height="768" alt="Screenshot (158)" src="https://github.com/user-attachments/assets/9d344dc3-8e32-462c-be43-d0f2ec521482" />
-
 ---
 
 ## 🏆 Hackathon Recognition
